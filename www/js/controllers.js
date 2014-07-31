@@ -1,37 +1,25 @@
 angular.module('starter.controllers', [])
 
+.controller('DashCtrl', function($scope, $cordovaCamera) {
+   $scope.takePicture = function() {
+    var options = { 
+        quality : 75, 
+        destinationType : Camera.DestinationType.DATA_URL, 
+        sourceType : Camera.PictureSourceType.CAMERA, 
+        allowEdit : true,
+        encodingType: Camera.EncodingType.JPEG,
+        targetWidth: 100,
+        targetHeight: 100,
+        popoverOptions: CameraPopoverOptions,
+        saveToPhotoAlbum: false
+    };
 
-
-
-.controller('LocationCtrl', ['$scope', '$cordovaGeolocation', function($scope, $cordovaGeolocation) {
-
-  var lastPosition = null;
-  $scope.locationError = null;
-  $scope.locationHistoty = [];
-  $scope.counter = 0;
-
-
-  var options = { maximumAge: 10000, timeout: 20000, enableHighAccuracy: true };
-
-  $cordovaGeolocation.watchPosition(options).then(function() {
-      // Not currently used
+    $cordovaCamera.getPicture(options).then(function(imageData) {
+      // Success! Image data is here
     }, function(err) {
-      $scope.locationError = err;
-    }, function(position) {
-      $scope.locationError = null;
-      $scope.counter++;
-      
-      if(!lastPosition || lastPosition.coords.latitude !== position.coords.latitude || lastPosition.coords.longitude !== position.coords.longitude) {
-        lastPosition = position;
-        $scope.locationHistoty.unshift(position);
-      }
-
-  });
-
-}])
-
-
-.controller('DashCtrl', function($scope) {
+      // An error occured. Show a message to the user
+    });
+  }
 })
 
 .controller('FriendsCtrl', function($scope, Friends) {
